@@ -1,0 +1,35 @@
+managed implementation in class zbp_i_purchaseorder_m unique;
+strict ( 2 );
+
+define behavior for ZI_PurchaseOrder_M alias PurchaseOrder
+persistent table zpo_header_db
+lock master
+authorization master ( instance )
+etag master LastChangedAt
+{
+  create;
+  update;
+  delete;
+  
+  association _PurchaseOrderItem { create; }
+
+  field ( numbering : managed, readonly ) PoUUID;
+  field ( readonly ) CreatedAt, CreatedBy, LastChangedAt, LastChangedBy;
+
+  action ( features : instance ) approveOrder result [1] $self;
+  action ( features : instance ) rejectOrder result [1] $self;
+
+  validation validateStatus on save { field OverallStatus; create; }
+
+  mapping for zpo_header_db
+  {
+    PoUUID = po_uuid;
+    PoID = po_id;
+    Description = description;
+    OverallStatus = overall_status;
+    CreatedBy = created_by;
+    CreatedAt = created_at;
+    LastChangedBy = last_changed_by;
+    LastChangedAt = last_changed_at;
+  }
+}
