@@ -1,0 +1,31 @@
+@Metadata.layer: #CORE
+@UI: {
+  headerInfo: { typeName: 'Invoice', typeNamePlural: 'Invoices', title: { type: #STANDARD, value: 'InvoiceID' } }
+}
+annotate view ZC_VendorInvoice with
+{
+  @UI.facet: [
+    { id: 'Invoice', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Invoice Details', position: 10 },
+    { id: 'Items', purpose: #STANDARD, type: #LINEITEM_REFERENCE, label: 'Items', position: 20, targetElement: '_InvoiceItem' }
+  ]
+
+  @UI.hidden: true
+  InvoiceUUID;
+
+  @UI: { lineItem: [ { position: 10 } ], identification: [ { position: 10 } ], selectionField: [ { position: 10 } ] }
+  InvoiceID;
+
+  @UI: { lineItem: [ { position: 20 } ], identification: [ { position: 20 } ], selectionField: [ { position: 20 } ] }
+  VendorID;
+
+  @UI: { lineItem: [ { position: 30 } ], identification: [ { position: 30 } ] }
+  CompanyCode;
+
+  @UI: { lineItem: [ { position: 40 } ], identification: [ { position: 40 } ] }
+  TotalAmount;
+
+  @UI: { lineItem: [ { position: 50, importance: #HIGH } ], identification: [ { position: 50 } ] }
+  @UI.lineItem: [ { type: #FOR_ACTION, dataAction: 'approveInvoice', label: 'Approve' },
+                  { type: #FOR_ACTION, dataAction: 'rejectInvoice', label: 'Reject' } ]
+  ApprovalStatus;
+}
